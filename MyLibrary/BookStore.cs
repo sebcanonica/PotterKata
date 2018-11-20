@@ -17,9 +17,7 @@ namespace MyLibrary
 
 		public decimal ComputePrice()
         {
-			if (_books.Count == 0)
-				return 0m;
-			return 8m;
+			return _books.Count * 8m;
         }
     }
 
