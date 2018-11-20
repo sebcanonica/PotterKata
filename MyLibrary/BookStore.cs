@@ -15,20 +15,33 @@ namespace MyLibrary
 			_books = books.ToList();
 		}
 
-		public decimal ComputePrice()
-        {
-			var price = _books.Count * 8m;
-
-			if(_books.Count == 2 && _books[0] != _books[1])
-			{
-				price *= 0.95m;
-			}
-			else if (_books.Count == 3)
+		public decimal BundlePrice(int booksInBundle)
+		{
+			var price = booksInBundle * 8m;
+			if(booksInBundle == 3)
 			{
 				price *= 0.9m;
 			}
-
+			else if(booksInBundle == 2)
+			{
+				price *= 0.95m;
+			}
 			return price;
+		}
+
+		public decimal ComputePrice()
+        {
+			var distinct = _books.Distinct();
+			if (distinct.Count() == _books.Count)
+			{
+				return BundlePrice(_books.Count);
+			}
+			else
+			{
+				var uniquePrice = 8m *(_books.Count - distinct.Count());
+				var bundlePrice = BundlePrice(distinct.Count());
+				return uniquePrice + bundlePrice;
+			}
         }
     }
 
