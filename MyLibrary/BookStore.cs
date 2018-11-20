@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MyLibrary
 {
@@ -7,15 +8,16 @@ namespace MyLibrary
 
 
     {
-		private List<Books> _books = new List<Books>();
+		private List<Books> _books;
 
-		public BookStore()
+		/*public BookStore()
 		{
-		}
+			_books = new List<Books>();
+		}*/
 
-		public BookStore(Books book)
+		public BookStore(params Books[] books)
 		{
-			this._books.Add(book);
+			_books = books.ToList();
 		}
 
 		public decimal ComputePrice()
