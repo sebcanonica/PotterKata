@@ -17,16 +17,8 @@ namespace MyLibrary
 
 		public decimal BundlePrice(int booksInBundle)
 		{
-			var price = booksInBundle * 8m;
-			if(booksInBundle == 3)
-			{
-				price *= 0.9m;
-			}
-			else if(booksInBundle == 2)
-			{
-				price *= 0.95m;
-			}
-			return price;
+			decimal [] BUNDLE_PRICES = { 0m, 8m, 15.2m, 21.6m };
+			return BUNDLE_PRICES[booksInBundle];
 		}
 
 		public decimal ComputePrice()
