@@ -9,13 +9,13 @@ namespace MyLibrary
     [TestFixture]
     class BookStore_should
     {
-        [Test]
-        public void Return_0_for_an_empty_basket()
-        {
-            var store = new BookStore();
-            var actual = store.ComputePrice();
-            Check.That(actual).IsEqualTo(0m);
-        }
+		[TestCase(0, TestName= "Return_0_for_an_empty_basket")]
+		public void TestBookStore(decimal totalPrice, params Books[] books)
+		{
+			var store = new BookStore(books);
+			var actual = store.ComputePrice();
+			Check.That(actual).IsEqualTo(totalPrice);
+		}
 
 		[Test]
 		public void Return_8_for_a_basket_with_1_book()
