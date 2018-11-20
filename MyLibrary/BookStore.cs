@@ -23,6 +23,10 @@ namespace MyLibrary
 			{
 				price *= 0.95m;
 			}
+			else if (_books.Count == 3)
+			{
+				price *= 0.9m;
+			}
 
 			return price;
         }
@@ -31,6 +35,7 @@ namespace MyLibrary
 	public enum Books
 	{
 		Book1,
-		Book2
+		Book2,
+		Book3
 	}
 }
