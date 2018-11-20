@@ -17,5 +17,13 @@ namespace MyLibrary
             Check.That(actual).IsEqualTo(0m);
         }
 
+		[Test]
+		public void Return_8_for_a_basket_with_1_book()
+		{
+			var store = new BookStore(Books.Book1);
+			var actual = store.ComputePrice();
+			Check.That(actual).IsEqualTo(8m);
+		}
+
     }
 }
