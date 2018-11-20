@@ -10,11 +10,6 @@ namespace MyLibrary
     {
 		private List<Books> _books;
 
-		/*public BookStore()
-		{
-			_books = new List<Books>();
-		}*/
-
 		public BookStore(params Books[] books)
 		{
 			_books = books.ToList();
