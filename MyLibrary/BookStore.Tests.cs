@@ -10,19 +10,12 @@ namespace MyLibrary
     class BookStore_should
     {
 		[TestCase(0, TestName= "Return_0_for_an_empty_basket")]
+		[TestCase(8, Books.Book1, TestName = "Return_8_for_a_basket_with_1_book")]
 		public void TestBookStore(decimal totalPrice, params Books[] books)
 		{
 			var store = new BookStore(books);
 			var actual = store.ComputePrice();
 			Check.That(actual).IsEqualTo(totalPrice);
-		}
-
-		[Test]
-		public void Return_8_for_a_basket_with_1_book()
-		{
-			var store = new BookStore(Books.Book1);
-			var actual = store.ComputePrice();
-			Check.That(actual).IsEqualTo(8m);
 		}
 
 		[Test]
