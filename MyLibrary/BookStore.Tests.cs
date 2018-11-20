@@ -10,11 +10,11 @@ namespace MyLibrary
     class BookStore_should
     {
         [Test]
-        public void Say_true()
+        public void Return_0_for_an_empty_basket()
         {
-            var myObject = new BookStore();
-            var actual = myObject.SayTrue();
-            Check.That(actual).IsEqualTo(true);
+            var store = new BookStore();
+            var actual = store.ComputePrice();
+            Check.That(actual).IsEqualTo(0m);
         }
 
     }

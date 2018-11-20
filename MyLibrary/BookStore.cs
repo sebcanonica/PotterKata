@@ -3,10 +3,12 @@
 namespace MyLibrary
 {
     public class BookStore
+
+
     {
-        public object SayTrue()
+        public decimal ComputePrice()
         {
-            return true;
+            return 0m;
         }
     }
 }
