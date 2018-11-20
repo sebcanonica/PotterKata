@@ -25,6 +25,7 @@ namespace MyLibrary
 			Check.That(actual).IsEqualTo(8m);
 		}
 
+		[Test]
 		public void Return_16_for_a_basket_with_the_same_book_twice()
 		{
 			var actual = new BookStore(Books.Book1, Books.Book1).ComputePrice();
