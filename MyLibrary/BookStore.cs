@@ -5,8 +5,6 @@ using System.Linq;
 namespace MyLibrary
 {
     public class BookStore
-
-
     {
 		private List<Books> _books;
 

@@ -1,8 +1,5 @@
 ﻿using NFluent;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using static MyLibrary.Books;
 
 namespace MyLibrary
@@ -10,6 +7,13 @@ namespace MyLibrary
     [TestFixture]
     class BookStore_should
     {
+        private void CheckBookStore(decimal totalPrice, Books[] books)
+        {
+            var store = new BookStore(books);
+            var actual = store.ComputePrice();
+            Check.That(actual).IsEqualTo(totalPrice);
+        }
+
         [TestCase(0,
             TestName = "Return_0_for_an_empty_basket")]
         [TestCase(8, Book1,
@@ -55,9 +59,7 @@ namespace MyLibrary
             TestName = "3 of 4, 2 of 2 and 1 solo")]
         public void TestBookStore(decimal totalPrice, params Books[] books)
         {
-            var store = new BookStore(books);
-            var actual = store.ComputePrice();
-            Check.That(actual).IsEqualTo(totalPrice);
+            CheckBookStore(totalPrice, books);
         }
 
         [TestCase(0)]
@@ -69,7 +71,7 @@ namespace MyLibrary
         [TestCase(8*3, Book1, Book1, Book1)]
         public void Basics(decimal totalPrice, params Books[] books)
         {
-            Check.That(new BookStore(books).ComputePrice()).IsEqualTo(totalPrice);
+            CheckBookStore(totalPrice, books);
         }
 
         [TestCase(8 * 2 * 0.95, Book1, Book2)]
@@ -78,7 +80,7 @@ namespace MyLibrary
         [TestCase(8 * 5 * 0.75, Book1, Book2, Book3, Book4, Book5)]
         public void SimpleDiscounts(decimal totalPrice, params Books[] books)
         {
-            Check.That(new BookStore(books).ComputePrice()).IsEqualTo(totalPrice);
+            CheckBookStore(totalPrice, books);
         }
 
         [TestCase(8 + (8 * 2 * 0.95), Book1, Book1, Book2)]
@@ -86,7 +88,7 @@ namespace MyLibrary
         [TestCase((8 * 4 * 0.8) + (8 * 2 * 0.95), Book1, Book1, Book2, Book3, Book3, Book4)]
         public void SeveralDiscounts(decimal totalPrice, params Books[] books)
         {
-            Check.That(new BookStore(books).ComputePrice()).IsEqualTo(totalPrice);
+            CheckBookStore(totalPrice, books);
         }
 
         [TestCase(2 * (8 * 4 * 0.8), Book1, Book1, Book2, Book2, Book3, Book3, Book4, Book5)]
@@ -96,9 +98,10 @@ namespace MyLibrary
             Book3, Book3, Book3, Book3,
             Book4, Book4, Book4, Book4, Book4,
             Book5, Book5, Book5, Book5)]
+        [TestCase(2 * (8 * 4 * 0.8), Book1, Book2, Book3, Book1, Book4, Book4, Book5, Book5)]
         public void EdgeCases(decimal totalPrice, params Books[] books)
         {
-            Check.That(new BookStore(books).ComputePrice()).IsEqualTo(totalPrice);
+            CheckBookStore(totalPrice, books);
         }
     }
 }

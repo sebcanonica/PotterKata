@@ -53,6 +53,8 @@
   <ItemGroup>
     <Compile Include="BookStore.cs" />
     <Compile Include="BookStore.Tests.cs" />
+    <Compile Include="BookStoreCombinatorial.cs" />
+    <Compile Include="BookStoreCombinatorial.Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
