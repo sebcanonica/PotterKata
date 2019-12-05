@@ -41,7 +41,7 @@ namespace ConsoleApp1
             {
                 for (var i = 0; i < ROLLS_PER_STEP; i++)
                 {
-                    if (rolls > 20) return;
+                    if (rolls > 400) return;
                     var book = (Books)_values.GetValue(_random.Next(_values.Length));
                     CheckWith(book, otherBooks, nbBooks - 1);
                     rolls++;                    
@@ -58,7 +58,7 @@ namespace ConsoleApp1
 
         static void Main(string[] args)
         {
-            for (var nbBooks = 1; nbBooks < 20; nbBooks++)
+            for (var nbBooks = 1; nbBooks < 100; nbBooks++)
             {
                 Console.WriteLine($"--------------- {nbBooks} -----------------");
                 var books = new List<Books>();
@@ -76,10 +76,10 @@ namespace ConsoleApp1
             if (nbBooks == 0)
             {
                 var cart = clonedBooks.ToArray();
-                var combinatorial = new BookStoreCombinatorial(cart).ComputePrice();
+                var memo = new BookStoreMemo(cart).ComputePrice();
                 var linear = new BookStore(cart).ComputePrice();
-                Console.WriteLine($"{combinatorial - linear}\t|\t{combinatorial}\t-\t{linear}");
-                Debug.Assert(combinatorial == linear);
+                Console.WriteLine($"{memo - linear}\t|\t{memo}\t-\t{linear}");
+                Debug.Assert(memo == linear);
             } 
             else
             {

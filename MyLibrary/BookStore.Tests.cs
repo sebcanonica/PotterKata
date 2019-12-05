@@ -68,7 +68,7 @@ namespace MyLibrary
         [TestCase(8, Book3)]
         [TestCase(8, Book4)]
         [TestCase(8, Book5)]
-        [TestCase(8*3, Book1, Book1, Book1)]
+        [TestCase(8 * 3, Book1, Book1, Book1)]
         public void Basics(decimal totalPrice, params Books[] books)
         {
             CheckBookStore(totalPrice, books);
@@ -99,6 +99,13 @@ namespace MyLibrary
             Book4, Book4, Book4, Book4, Book4,
             Book5, Book5, Book5, Book5)]
         [TestCase(2 * (8 * 4 * 0.8), Book1, Book2, Book3, Book1, Book4, Book4, Book5, Book5)]
+        [TestCase(154.4,
+            Book2, Book5, Book4, Book5, Book5,
+            Book5, Book5, Book2, Book4, Book2,
+            Book5, Book5, Book3, Book4, Book2,
+            Book5, Book5, Book4, Book5, Book1,
+            Book3, Book5
+        )]
         public void EdgeCases(decimal totalPrice, params Books[] books)
         {
             CheckBookStore(totalPrice, books);

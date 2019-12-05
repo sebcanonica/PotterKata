@@ -1,15 +1,18 @@
 ﻿using NFluent;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using static MyLibrary.Books;
 
 namespace MyLibrary
 {
     [TestFixture]
-    class BookStoreCombinatorial_should
+    class BookStoreMemo_should
     {
         private void CheckBookStore(decimal totalPrice, Books[] books)
         {
-            var store = new BookStoreCombinatorial(books);
+            var store = new BookStoreMemo(books);
             var actual = store.ComputePrice();
             Check.That(actual).IsEqualTo(totalPrice);
         }
@@ -36,27 +39,27 @@ namespace MyLibrary
             TestName = "1 bundle of 5 and 1 solo")]
         [TestCase(2 * (8 * 4 * 0.8), Book1, Book1, Book2, Book2, Book3, Book3, Book4, Book5,
             TestName = "2 bundles of 4")]
-        /*[TestCase(3 * (8 * 5 * 0.75) + 2 * (8 * 4 * 0.8),
+        [TestCase(3 * (8 * 5 * 0.75) + 2 * (8 * 4 * 0.8),
             Book1, Book1, Book1, Book1, Book1,
             Book2, Book2, Book2, Book2, Book2,
             Book3, Book3, Book3, Book3,
             Book4, Book4, Book4, Book4, Book4,
             Book5, Book5, Book5, Book5,
-            TestName = "3 bundles of 5 and 2 bundle of 4")]*/
-        /*[TestCase(8 * 5 * 0.75 + 8 * 4 * 0.8 + 8 * 2 * 0.95 + 8,//78.8, // 1 2 2 3 4
+            TestName = "3 bundles of 5 and 2 bundle of 4")]
+        [TestCase(8 * 5 * 0.75 + 8 * 4 * 0.8 + 8 * 2 * 0.95 + 8,//78.8, // 1 2 2 3 4
             Book1, Book1, Book1,
             Book2, Book2,
             Book3, Book3, Book3, Book3,
             Book4, Book4,
             Book5,
-            TestName = "1 of 5, 1 of 4, 1 of 2 and 1 solo")] // Slow
-        /*[TestCase(3 * 8 * 4 * 0.8 + 8 * 2 * 0.95 + 8, //100, // 1 2 3 4 5
+            TestName = "1 of 5, 1 of 4, 1 of 2 and 1 solo")]
+        [TestCase(3 * 8 * 4 * 0.8 + 8 * 2 * 0.95 + 8, //100, // 1 2 3 4 5
             Book1,
             Book2, Book2,
             Book3, Book3, Book3,
             Book4, Book4, Book4, Book4,
             Book5, Book5, Book5, Book5, Book5,
-            TestName = "3 of 4, 2 of 2 and 1 solo")]*/ //Out of memory
+            TestName = "3 of 4, 2 of 2 and 1 solo")] //Out of memory
         public void TestBookStore(decimal totalPrice, params Books[] books)
         {
             CheckBookStore(totalPrice, books);
@@ -92,18 +95,25 @@ namespace MyLibrary
         }
 
         [TestCase(2 * (8 * 4 * 0.8), Book1, Book1, Book2, Book2, Book3, Book3, Book4, Book5)]
-        /*[TestCase(3 * (8 * 5 * 0.75) + 2 * (8 * 4 * 0.8),
+        [TestCase(3 * (8 * 5 * 0.75) + 2 * (8 * 4 * 0.8),
             Book1, Book1, Book1, Book1, Book1,
             Book2, Book2, Book2, Book2, Book2,
             Book3, Book3, Book3, Book3,
             Book4, Book4, Book4, Book4, Book4,
-            Book5, Book5, Book5, Book5)]*/
+            Book5, Book5, Book5, Book5)]
         [TestCase(2 * (8 * 4 * 0.8), 
             Book1, 
             Book2, 
             Book3, Book1,
             Book4, Book4, 
             Book5, Book5)]
+        [TestCase(154.4,
+            Book2, Book5, Book4, Book5, Book5,
+            Book5, Book5, Book2, Book4, Book2,
+            Book5, Book5, Book3, Book4, Book2,
+            Book5, Book5, Book4, Book5, Book1,
+            Book3, Book5
+        )]
         public void EdgeCases(decimal totalPrice, params Books[] books)
         {
             CheckBookStore(totalPrice, books);
