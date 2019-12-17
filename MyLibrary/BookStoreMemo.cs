@@ -7,12 +7,10 @@ namespace MyLibrary
     public class BookStoreMemo
     {
         private Books[] _books;
-        private int _totalBooks;
 
         public BookStoreMemo(Books[] books)
         {
             _books = books;
-            _totalBooks = books.Length;
         }
 
         public decimal ComputePrice()
@@ -22,38 +20,37 @@ namespace MyLibrary
                 .Select(book => book.Count())
                 .OrderBy(num => num)
                 .ToArray();
-            return priceFor(bookCounts);
+            return PriceFor(bookCounts);
         }
 
         private static Dictionary<string, decimal> _priceForCounts = new Dictionary<string, decimal>();
 
-        private decimal priceFor(int[] bookCounts)
+        private decimal PriceFor(int[] bookCounts)
         {
             if (bookCounts.Length == 0) return 0m;
             if (bookCounts.Length == 1) return bookCounts[0] * 8m;
 
-            var hash = BookCounstHash(bookCounts);
+            var hash = BookCountsHash(bookCounts);
             if (_priceForCounts.ContainsKey(hash))
                 return _priceForCounts[hash];
 
             List<decimal> prices = new List<decimal>();
-
             var allCombi = GetCombinaisonFor(bookCounts.Length);
             
             foreach (var combi in allCombi)
             {
                 var bookCountsWithoutCombi = RemoveCombi(bookCounts, combi);
                 var nbInBundle = combi.Count(b => b);
-                prices.Add(BundlePrice(nbInBundle) + priceFor(bookCountsWithoutCombi));
+                prices.Add(BundlePrice(nbInBundle) + PriceFor(bookCountsWithoutCombi));
             }
             var price = prices.Min();
             _priceForCounts[hash] = price;
             return price;            
         }
 
-        private string BookCounstHash(int[] bookCounts)
+        private string BookCountsHash(int[] bookCounts)
         {
-            return bookCounts.Aggregate("", (s, n) => s + "|" + n.ToString());
+            return string.Join("|", bookCounts);
         }
 
         private static Dictionary<int, List<bool[]>> _memoCombiForNbDifferent = new Dictionary<int, List<bool[]>>();
