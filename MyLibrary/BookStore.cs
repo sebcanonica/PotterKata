@@ -14,43 +14,50 @@ namespace MyLibrary
 		}
 
 		public decimal ComputePrice()
-        {
-			var bookCounts = _books.GroupBy(book => book)
-				.OrderBy(group => group.Count());
-
-			if (bookCounts.Count() == 5)
-			{				
-				var bundlesOf4 = bookCounts.Skip(1).First().Count();
-				var bundlesOf3 = bookCounts.Skip(2).First().Count();
-				if (bundlesOf3 > bundlesOf4)
-				{
-					// Maximize number of bundles of 4
-					var priceWithBundlesOf4 = 0m;
-					var bundlesOf5 = bookCounts.First().Count();
-					var additionalBundlesOf4 = Math.Min(bundlesOf5, bundlesOf3 - bundlesOf4);
-					var pricedBundlesOf5 = bundlesOf5 - additionalBundlesOf4;
-					var pricedBundlesOf4 = bundlesOf4 + additionalBundlesOf4 - pricedBundlesOf5;
-					priceWithBundlesOf4 = BundlePrice(5) * pricedBundlesOf5
-						+ BundlePrice(4) * pricedBundlesOf4
-						+ BookCountsPrice(bookCounts.Skip(2), bundlesOf4 + additionalBundlesOf4);
-					return priceWithBundlesOf4;
-				}				
-			}
-
-			return BookCountsPrice(bookCounts);
-        }
-
-		private decimal BookCountsPrice(IEnumerable<IGrouping<Books,Books>> bookCounts, int booksInstanceAlreadyPriced = 0)
 		{
-			var price = 0m;
-			var maxBundleSize = bookCounts.Count();
-			foreach (var bookCount in bookCounts)
+			var bookCounts = _books
+				.GroupBy(book => book)
+				.Select(book => book.Count())
+				.OrderBy(num => num);
+
+			var bundleCounts = bookCounts
+				.Aggregate(new { totalBundleCount = 0, list = new List<int>() },
+					(acc, bookCount) =>
+					{
+						acc.list.Add(bookCount - acc.totalBundleCount);
+						return new { totalBundleCount = bookCount, acc.list };
+					}).list.ToArray();
+
+			MaximizeBundlesOf4(bundleCounts);
+
+			return BundleCountsPrice(bundleCounts);
+		}
+
+		private static void MaximizeBundlesOf4(int[] bundleCounts)
+		{
+			if (bundleCounts.Count() == 5)
 			{
-				price += BundlePrice(maxBundleSize) * (bookCount.Count() - booksInstanceAlreadyPriced);
-				maxBundleSize -= 1;
-				booksInstanceAlreadyPriced = bookCount.Count();
+				const int I_BUNDLES_OF_5 = 0;
+				const int I_BUNDLES_OF_4 = 1;
+				const int I_BUNDLES_OF_3 = 2;
+				var bundlesOf3 = bundleCounts[I_BUNDLES_OF_3];
+				if (bundlesOf3 > 0)
+				{
+					var bundlesOf5 = bundleCounts[I_BUNDLES_OF_5];
+					var additionalBundlesOf4 = 2 * Math.Min(bundlesOf5, bundlesOf3);
+					bundleCounts[I_BUNDLES_OF_5] -= additionalBundlesOf4 / 2;
+					bundleCounts[I_BUNDLES_OF_4] += additionalBundlesOf4;
+					bundleCounts[I_BUNDLES_OF_3] -= additionalBundlesOf4 / 2;
+				}
 			}
-			return price;
+		}
+
+		private decimal BundleCountsPrice(IEnumerable<int> bundleCounts)
+		{
+			return bundleCounts
+				.Reverse()
+				.Select((bundleCount, index) => bundleCount * BundlePrice(index + 1))
+				.Sum();
 		}
 
 		private decimal BundlePrice(int booksInBundle)
